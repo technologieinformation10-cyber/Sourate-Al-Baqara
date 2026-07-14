@@ -1,0 +1,336 @@
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:"Tahoma",Arial,sans-serif;
+}
+
+body{
+    direction:rtl;
+    background:#f4f7f5;
+    text-align:center;
+    color:#222;
+}
+
+
+/* الرأس */
+
+header{
+    background:#075e45;
+    color:white;
+    padding:20px 10px;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+
+header h1{
+    font-size:32px;
+}
+
+
+header h2{
+    font-size:18px;
+    margin-top:8px;
+    font-weight:normal;
+}
+
+
+/* شريط التقدم */
+
+.progress{
+    height:18px;
+    background:#ddd;
+    border-radius:20px;
+    margin:20px;
+    overflow:hidden;
+}
+
+
+#bar{
+    height:100%;
+    width:0%;
+    background:#2ecc71;
+    transition:.5s;
+}
+
+
+/* قائمة الأثمان */
+
+#athman{
+
+    padding:20px;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(120px,1fr));
+
+    gap:15px;
+
+}
+
+
+
+.card{
+
+    background:white;
+
+    padding:25px 10px;
+
+    border-radius:18px;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    box-shadow:
+    0 3px 10px rgba(0,0,0,.12);
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+.card:active{
+
+    transform:scale(.95);
+
+}
+
+
+
+.card.done{
+
+    background:#2ecc71;
+
+    color:white;
+
+}
+
+
+
+/* النافذة */
+
+#popup{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.6);
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:15px;
+
+}
+
+
+
+.box{
+
+    background:white;
+
+    width:100%;
+
+    max-width:400px;
+
+    border-radius:25px;
+
+    padding:25px;
+
+}
+
+
+
+.box h2{
+
+    color:#075e45;
+
+    margin-bottom:15px;
+
+}
+
+
+#info{
+
+    line-height:2;
+
+    margin-bottom:15px;
+
+}
+
+
+
+/* العداد */
+
+
+.counter{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:25px;
+
+    margin:20px;
+
+}
+
+
+
+.counter button{
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:50%;
+
+    background:#075e45;
+
+    color:white;
+
+    font-size:30px;
+
+}
+
+
+
+#count{
+
+    font-size:35px;
+
+    font-weight:bold;
+
+}
+
+
+
+/* التسجيل */
+
+
+.record-status{
+
+    background:#eee;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    margin:10px;
+
+}
+
+
+button{
+
+    border:none;
+
+    border-radius:15px;
+
+    padding:15px;
+
+    margin:5px;
+
+    font-size:17px;
+
+    cursor:pointer;
+
+}
+
+
+
+#recordBtn{
+
+    background:#8e44ad;
+
+    color:white;
+
+    width:90%;
+
+}
+
+
+
+#stopBtn{
+
+    background:#e74c3c;
+
+    color:white;
+
+    width:90%;
+
+}
+
+
+
+#deleteVoice{
+
+    background:#555;
+
+    color:white;
+
+    width:90%;
+
+}
+
+
+
+audio{
+
+    width:100%;
+
+    margin:15px 0;
+
+}
+
+
+
+.save{
+
+    background:#2ecc71;
+
+    color:white;
+
+    width:90%;
+
+}
+
+
+
+.close{
+
+    background:#777;
+
+    color:white;
+
+    width:90%;
+
+}
+
+
+/* الهاتف الصغير */
+
+@media(max-width:400px){
+
+    header h1{
+        font-size:26px;
+    }
+
+    .card{
+        font-size:18px;
+        padding:20px 5px;
+    }
+
+}
