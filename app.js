@@ -32,7 +32,7 @@ let currentStream = null;
 
 
 // ==========================
-// IndexedDB للصوت
+// IndexedDB لحفظ التسجيلات
 // ==========================
 
 let db;
@@ -60,7 +60,7 @@ request.onupgradeneeded = function(e){
 
 
 
-request.onsuccess=function(e){
+request.onsuccess = function(e){
 
     db = e.target.result;
 
@@ -73,7 +73,7 @@ request.onsuccess=function(e){
 function saveVoice(id,blob){
 
 
-    let tx =
+    let transaction =
     db.transaction(
         "voices",
         "readwrite"
@@ -81,13 +81,14 @@ function saveVoice(id,blob){
 
 
     let store =
-    tx.objectStore("voices");
+    transaction.objectStore("voices");
 
 
     store.put(
         blob,
         "voice_"+id
     );
+
 
 }
 
@@ -98,7 +99,7 @@ function saveVoice(id,blob){
 function getVoice(id,callback){
 
 
-    let tx =
+    let transaction =
     db.transaction(
         "voices",
         "readonly"
@@ -106,19 +107,21 @@ function getVoice(id,callback){
 
 
     let store =
-    tx.objectStore("voices");
+    transaction.objectStore("voices");
 
 
-    let req =
+    let request =
     store.get(
         "voice_"+id
     );
 
 
 
-    req.onsuccess=function(){
+    request.onsuccess=function(){
 
-        callback(req.result);
+
+        callback(request.result);
+
 
     };
 
@@ -132,7 +135,7 @@ function getVoice(id,callback){
 function deleteVoiceDB(id){
 
 
-    let tx =
+    let transaction =
     db.transaction(
         "voices",
         "readwrite"
@@ -140,7 +143,7 @@ function deleteVoiceDB(id){
 
 
     let store =
-    tx.objectStore("voices");
+    transaction.objectStore("voices");
 
 
     store.delete(
@@ -153,9 +156,12 @@ function deleteVoiceDB(id){
 
 
 
+
+
 // ==========================
 // تشغيل التطبيق
 // ==========================
+
 
 function startApp(){
 
@@ -231,7 +237,9 @@ card.innerHTML =
 
 card.onclick=function(){
 
+
 openThumn(thumn);
+
 
 };
 
@@ -240,39 +248,32 @@ openThumn(thumn);
 container.appendChild(card);
 
 
+
 });
 
 
-}
-
-
-
-
-
-
-// ==========================
+}// ==========================
 // فتح الثمن
 // ==========================
-
 
 function openThumn(thumn){
 
 
-currentThumn =
-thumn;
+currentThumn = thumn;
 
 
-repeatCount=0;
+repeatCount = 0;
+
 
 
 document.getElementById("count")
-.innerHTML=0;
+.innerHTML = 0;
 
 
 
 document.getElementById("title")
 .innerHTML =
-"الثمن "+thumn.id;
+"الثمن " + thumn.id;
 
 
 
@@ -287,14 +288,34 @@ document.getElementById("info")
 
 
 
-document.getElementById("audioPlayer")
-.removeAttribute("src");
+// ==========================
+// تصفير الصوت عند تغيير الثمن
+// ==========================
+
+
+let player =
+document.getElementById("audioPlayer");
+
+
+player.pause();
+
+player.currentTime = 0;
+
+player.removeAttribute("src");
+
+player.load();
 
 
 
-// تحميل التسجيل الموجود
+// تحميل صوت هذا الثمن فقط
 
 loadVoice(thumn.id);
+
+
+
+document.getElementById("status")
+.innerHTML =
+"جاهز للتسجيل";
 
 
 
@@ -302,7 +323,14 @@ document.getElementById("popup")
 .style.display="flex";
 
 
-}// ==========================
+}
+
+
+
+
+
+
+// ==========================
 // عداد التكرار
 // ==========================
 
@@ -324,6 +352,8 @@ repeatCount;
 
 
 
+
+
 document.getElementById("minus")
 .onclick=function(){
 
@@ -335,12 +365,14 @@ repeatCount--;
 }
 
 
+
 document.getElementById("count")
 .innerHTML =
 repeatCount;
 
 
 };
+
 
 
 
@@ -358,7 +390,9 @@ document.getElementById("saveBtn")
 if(currentThumn){
 
 
-currentThumn.done=true;
+
+currentThumn.done = true;
+
 
 
 localStorage.setItem(
@@ -374,16 +408,20 @@ JSON.stringify(athman)
 closePopup();
 
 
+
 displayAthman();
 
 
+
 updateProgress();
+
 
 
 }
 
 
 };
+
 
 
 
@@ -419,15 +457,7 @@ document.getElementById("progressText")
 finished+" / 39 ثمن";
 
 
-}
-
-
-
-
-
-
-
-// ==========================
+}// ==========================
 // التسجيل الصوتي
 // ==========================
 
@@ -441,8 +471,7 @@ try{
 
 
 currentStream =
-await navigator.mediaDevices
-.getUserMedia({
+await navigator.mediaDevices.getUserMedia({
 
 audio:true
 
@@ -451,9 +480,7 @@ audio:true
 
 
 recorder =
-new MediaRecorder(
-currentStream
-);
+new MediaRecorder(currentStream);
 
 
 
@@ -464,7 +491,9 @@ audioChunks=[];
 recorder.ondataavailable =
 function(e){
 
+
 audioChunks.push(e.data);
+
 
 };
 
@@ -472,7 +501,8 @@ audioChunks.push(e.data);
 
 
 
-recorder.onstop=function(){
+recorder.onstop =
+function(){
 
 
 
@@ -486,7 +516,7 @@ type:"audio/webm"
 
 
 
-// حفظ التسجيل
+// حفظ التسجيل الخاص بالثمن
 
 saveVoice(
 currentThumn.id,
@@ -496,20 +526,22 @@ blob
 
 
 
-
 let url =
 URL.createObjectURL(blob);
 
 
 
-document
-.getElementById("audioPlayer")
-.src=url;
+let player =
+document.getElementById("audioPlayer");
+
+
+player.src=url;
+
+player.load();
 
 
 
-document
-.getElementById("status")
+document.getElementById("status")
 .innerHTML =
 "تم حفظ التسجيل ✅";
 
@@ -535,21 +567,18 @@ recorder.start();
 
 
 
-document
-.getElementById("status")
+document.getElementById("status")
 .innerHTML =
 "🔴 جاري التسجيل...";
 
 
 
-document
-.getElementById("recordBtn")
+document.getElementById("recordBtn")
 .disabled=true;
 
 
 
-document
-.getElementById("stopBtn")
+document.getElementById("stopBtn")
 .disabled=false;
 
 
@@ -575,7 +604,6 @@ alert(
 
 
 
-
 // ==========================
 // إيقاف التسجيل
 // ==========================
@@ -594,13 +622,13 @@ recorder.stop();
 
 
 
-document
-.getElementById("recordBtn")
+document.getElementById("recordBtn")
 .disabled=false;
 
 
 
 this.disabled=true;
+
 
 
 };
@@ -619,11 +647,9 @@ this.disabled=true;
 function loadVoice(id){
 
 
-
 getVoice(
 id,
 function(blob){
-
 
 
 let player =
@@ -641,14 +667,21 @@ URL.createObjectURL(blob);
 player.src=url;
 
 
+player.load();
+
+
 }
 
 else{
 
 
-player.removeAttribute(
-"src"
-);
+player.pause();
+
+player.currentTime=0;
+
+player.removeAttribute("src");
+
+player.load();
 
 
 }
@@ -675,9 +708,7 @@ document.getElementById("deleteVoice")
 .onclick=function(){
 
 
-
 if(currentThumn){
-
 
 
 deleteVoiceDB(
@@ -686,14 +717,22 @@ currentThumn.id
 
 
 
-document
-.getElementById("audioPlayer")
-.removeAttribute("src");
+let player =
+document.getElementById("audioPlayer");
 
 
 
-document
-.getElementById("status")
+player.pause();
+
+player.currentTime=0;
+
+player.removeAttribute("src");
+
+player.load();
+
+
+
+document.getElementById("status")
 .innerHTML =
 "تم حذف التسجيل 🗑️";
 
@@ -730,8 +769,7 @@ closePopup();
 function closePopup(){
 
 
-document
-.getElementById("popup")
+document.getElementById("popup")
 .style.display="none";
 
 
@@ -743,7 +781,7 @@ document
 
 
 // ==========================
-// تشغيل التطبيق
+// بدء التطبيق
 // ==========================
 
 
